@@ -70,17 +70,20 @@ export class WeatherDisplay extends LitElement {
     super()
   }
 
-  async onSubmit(event: any) {
-    event.preventDefault()
-    try {
-      const weatherService = new WeatherService(this.httpClient)
-      const weatherData = weatherService.getWeatherData(this.cityName)
-      this.temperatureResult = weatherData
-    } catch (error) {
-      this.errorMessage = 'An error occurred while fetching weather data.'
-    }
+  public onSubmit(event: any) {
+    event.preventDefault();
+    this.errorMessage = '';
+    const weatherService = new WeatherService(this.httpClient);
+    weatherService.getWeatherData(this.cityName).subscribe(
+      (weatherData) => {
+        this.temperatureResult = weatherData;
+      },
+      (error) => {
+        this.errorMessage = 'Error occurred while fetching weather data.';
+      }
+    );
   }
-
+  
   handleCityChange(event: any) {
     this.cityName = event.target.value
   }
